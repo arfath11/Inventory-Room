@@ -49,7 +49,7 @@ class ItemDetailsViewModel(
         itemsRepository.getItemStream(itemId)
             .filterNotNull()
             .map {
-                ItemDetailsUiState(itemDetails = it.toItemDetails())
+                ItemDetailsUiState(outOfStock = it.quantity <= 0 ,itemDetails = it.toItemDetails())
             }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
@@ -66,6 +66,11 @@ class ItemDetailsViewModel(
             }
 
         }
+    }
+
+
+    suspend fun deleteItem() {
+        itemsRepository.deleteItem(uiState.value.itemDetails.toItem())
     }
 }
 
