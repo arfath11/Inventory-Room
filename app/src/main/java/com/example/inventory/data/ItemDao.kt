@@ -15,7 +15,8 @@ interface ItemDao {
 
     /*
     When inserting items into the database, conflicts can happen.
-    For example, multiple places in the code tries to update the entity with different, conflicting, values such as the same primary key. An entity is a row in DB. In the Inventory app, we only insert the entity from one place that is the Add Item screen so we are not expecting any conflicts and can set the conflict strategy to Ignore.
+    For example, multiple places in the code tries to update the entity with different, conflicting, values such as the same primary key.
+    An entity is a row in DB. In the Inventory app, we only insert the entity from one place that is the Add Item screen so we are not expecting any conflicts and can set the conflict strategy to Ignore.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun  insert(item:Item)

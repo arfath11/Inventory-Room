@@ -45,6 +45,8 @@ import com.example.inventory.ui.navigation.NavigationDestination
 import com.example.inventory.ui.theme.InventoryTheme
 import java.util.Currency
 import java.util.Locale
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 object ItemEntryDestination : NavigationDestination {
     override val route = "item_entry"
@@ -59,6 +61,16 @@ fun ItemEntryScreen(
     canNavigateBack: Boolean = true,
     viewModel: ItemEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+
+
+    /*
+    Note: The rememberCoroutineScope() is a composable function that returns a CoroutineScope bound to the composition where it's called.
+     You can use the rememberCoroutineScope() composable function when you want to launch a coroutine outside of a composable and ensure the coroutine is canceled after the scope leaves the composition.
+     You can use this function when you need to control the lifecycle of coroutines manually, for example, to cancel an animation whenever a user event happens.
+     */
+
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         topBar = {
             InventoryTopAppBar(
@@ -71,7 +83,11 @@ fun ItemEntryScreen(
         ItemEntryBody(
             itemUiState = viewModel.itemUiState,
             onItemValueChange = viewModel::updateUiState,
-            onSaveClick = { },
+            onSaveClick = { coroutineScope.launch {
+                viewModel.saveItem()
+                navigateBack()
+
+            } },
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
